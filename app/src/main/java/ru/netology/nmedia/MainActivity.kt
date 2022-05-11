@@ -29,6 +29,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun ActivityMainBinding.render(post: Post) {
+        authorName.text = post.authorName
+        content.text = post.content
+        date.text = post.date
         countLikes.text = formatCount(post.likes)
         countShares.text = formatCount(post.shared)
         countVisibility.text = formatCount(post.views)

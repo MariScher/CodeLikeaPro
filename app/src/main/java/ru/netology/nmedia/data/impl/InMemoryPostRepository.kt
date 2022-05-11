@@ -33,8 +33,9 @@ class InMemoryPostRepository : PostRepository {
         val currentPost = checkNotNull(data.value) {
             "Data value should not be null"
         }
-        val sharedPost = currentPost.copy()
-        if (sharedPost.sharedBySmb) sharedPost.shared else sharedPost.shared++
+        val sharedPost = currentPost.copy(
+        shared = currentPost.shared++
+        )
         data.value = sharedPost
     }
 }
