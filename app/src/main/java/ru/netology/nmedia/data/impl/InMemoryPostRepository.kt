@@ -6,36 +6,41 @@ import ru.netology.nmedia.dto.Post
 
 class InMemoryPostRepository : PostRepository {
 
+    private val posts
+        get() = checkNotNull(data.value) {
+            "Data value should not be null"
+        }
+
     override val data = MutableLiveData(
-        Post(
-            id = 1,
-            authorName = "Нетология. Университет интернет-профессий будущего",
-            content = "Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению. Мы растём сами и помогаем расти студентам: от новичков до уверенных профессионалов. Но самое важное остаётся с нами: мы верим, что в каждом уже есть сила, которая заставляет хотеть больше, целиться выше, бежать быстрее. Наша миссия — помочь встать на путь роста и начать цепочку перемен → http://netolo.gy/fyb",
-            date = "21 мая в 18:36",
-            likes = 1099,
-            shared = 999,
-            views = 8543,
-            likedByMe = false,
-            sharedBySmb = false
-        )
+        List(10) { index ->
+            Post(
+                id = index + 1L,
+                authorName = "Нетология. Университет интернет-профессий будущего",
+                content = "Здесь будет текст поста № $index",
+                date = "21 мая в 18:36",
+                likes = 999,
+                shared = 99,
+                views = 9999,
+                likedByMe = false,
+                sharedBySmb = false
+            )
+        }
     )
 
-    override fun like() {
-        val currentPost = checkNotNull(data.value) {
-            "Data value should not be null"
+    override fun like(postId: Long) {
+        data.value = posts.map { it ->
+            if (it.id != postId) it
+            else it.copy(
+                likedByMe = !it.likedByMe,
+                likes = it.likes + if (!it.likedByMe) 1 else -1
+            )
         }
-        val likedPost = currentPost.copy(likedByMe = !currentPost.likedByMe)
-        if (likedPost.likedByMe) likedPost.likes++ else likedPost.likes--
-        data.value = likedPost
     }
 
-    override fun share() {
-        val currentPost = checkNotNull(data.value) {
-            "Data value should not be null"
+    override fun share(postId: Long) {
+        data.value = posts.map {
+            if (it.id != postId) it
+            else it.copy(shared = it.shared++)
         }
-        val sharedPost = currentPost.copy(
-        shared = currentPost.shared++
-        )
-        data.value = sharedPost
     }
 }
