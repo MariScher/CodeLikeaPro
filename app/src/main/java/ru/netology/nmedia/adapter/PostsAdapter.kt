@@ -3,7 +3,6 @@ package ru.netology.nmedia.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -67,17 +66,13 @@ internal class PostsAdapter(
                 authorName.text = post.authorName
                 content.text = post.content
                 date.text = post.date
-                countLikes.text = formatCount(post.likes)
-                countShares.text = formatCount(post.shared)
-                countVisibility.text = formatCount(post.views)
-                favourite.setImageResource(getLikeIconResId(post.likedByMe))
-                options.setOnClickListener { popupMenu.show() }
+                favourite.isChecked = post.likedByMe
+                favourite.text = formatCount(post.likes)
+                share.text = formatCount(post.shared)
+                visibility.text = formatCount(post.views)
+                options.setOnClickListener { popupMenu.show() }git chec 
             }
         }
-
-        @DrawableRes
-        private fun getLikeIconResId(liked: Boolean) =
-            if (liked) R.drawable.ic_favorite_red_24dp else R.drawable.ic_favorite_b_24dp
 
         private fun formatCount(number: Int): String {
             return when (number) {
