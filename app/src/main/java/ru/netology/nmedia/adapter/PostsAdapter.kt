@@ -70,7 +70,7 @@ internal class PostsAdapter(
                 favourite.text = formatCount(post.likes)
                 share.text = formatCount(post.shared)
                 visibility.text = formatCount(post.views)
-                options.setOnClickListener { popupMenu.show() }git chec 
+                options.setOnClickListener { popupMenu.show() }
             }
         }
 
