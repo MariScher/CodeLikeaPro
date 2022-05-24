@@ -6,29 +6,26 @@ import ru.netology.nmedia.dto.Post
 
 class InMemoryPostRepository : PostRepository {
 
+    private var nextId = GENERATED_POSTS_AMOUNT.toLong()
+
     private val posts
         get() = checkNotNull(data.value) {
             "Data value should not be null"
         }
 
     override val data = MutableLiveData(
-        List(10) { index ->
+        List(GENERATED_POSTS_AMOUNT) { index ->
             Post(
                 id = index + 1L,
                 authorName = "Нетология. Университет интернет-профессий будущего",
                 content = "Здесь будет текст поста № $index",
-                date = "21 мая в 18:36",
-                likes = 999,
-                shared = 99,
-                views = 9999,
-                likedByMe = false,
-                sharedBySmb = false
+                date = "21 мая в 18:36"
             )
         }
     )
 
     override fun like(postId: Long) {
-        data.value = posts.map { it ->
+        data.value = posts.map {
             if (it.id != postId) it
             else it.copy(
                 likedByMe = !it.likedByMe,
@@ -42,5 +39,29 @@ class InMemoryPostRepository : PostRepository {
             if (it.id != postId) it
             else it.copy(shared = it.shared++)
         }
+    }
+
+    override fun delete(postId: Long) {
+        data.value = posts.filter { it.id != postId }
+    }
+
+    override fun save(post: Post) {
+        if (post.id == PostRepository.NEW_POST_ID) insert(post) else update(post)
+    }
+
+    private fun insert(post: Post) {
+        data.value = listOf(
+            post.copy(id = nextId++)
+        ) + posts
+    }
+
+    private fun update(post: Post) {
+        data.value = posts.map {
+            if (it.id == post.id) post else it
+        }
+    }
+
+    private companion object {
+        const val GENERATED_POSTS_AMOUNT = 1000
     }
 }
