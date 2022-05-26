@@ -1,6 +1,7 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
@@ -21,11 +22,7 @@ internal class PostsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = PostBinding.inflate(inflater, parent, false)
-
-        return ViewHolder(
-            binding,
-            interactionListener,
-        )
+        return ViewHolder(binding, interactionListener)
     }
 
     class ViewHolder(
@@ -38,6 +35,9 @@ internal class PostsAdapter(
         init {
             binding.favourite.setOnClickListener { listener.likeButtonClicked(post) }
             binding.share.setOnClickListener { listener.shareButtonClicked(post) }
+            binding.play.setOnClickListener { listener.playVideoButtonClicked(post) }
+            binding.videoContent.setOnClickListener { listener.playVideoButtonClicked(post) }
+            binding.options.setOnClickListener { popupMenu.show() }
         }
 
         private val popupMenu by lazy {
@@ -70,7 +70,8 @@ internal class PostsAdapter(
                 favourite.text = formatCount(post.likes)
                 share.text = formatCount(post.shared)
                 visibility.text = formatCount(post.views)
-                options.setOnClickListener { popupMenu.show() }
+                groupVideo.visibility =
+                    if (post.videoLink.isBlank()) View.GONE else View.VISIBLE
             }
         }
 
