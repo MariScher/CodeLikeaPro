@@ -10,4 +10,5 @@ interface PostInteractionListener {
     fun editButtonClicked(post: Post)
     fun playVideoButtonClicked(post: Post)
     fun cancelButtonClicked()
+    fun onContentClicked(post: Post)
 }

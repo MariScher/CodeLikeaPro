@@ -87,7 +87,12 @@ class FilePostRepository(private val application: Application) : PostRepository 
         }
     }
 
+    override fun getById(postId: Long): Post? {
+        return posts.find { it.id == postId }
+    }
+
     private companion object {
+        const val POSTS_PREFS_KEY = "posts"
         const val NEXT_ID_PREFS_KEY = "next_id"
         const val FILE_NAME = "posts.json"
     }

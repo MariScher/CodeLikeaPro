@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.PostContentActivity">
+    tools:context=".ui.PostContentFragment">
 
     <EditText
         android:id="@+id/edit"
@@ -12,6 +12,8 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:gravity="start|top"
+        android:autofillHints=""
+        tools:ignore="LabelFor"
         android:inputType="textMultiLine" />
 
     <com.google.android.material.bottomappbar.BottomAppBar

@@ -4,7 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.data.PostRepository
 import ru.netology.nmedia.dto.Post
 
-class InMemoryPostRepository : PostRepository {
+object InMemoryPostRepository : PostRepository {
+
+    private const val GENERATED_POSTS_AMOUNT = 1000
 
     private var nextId = GENERATED_POSTS_AMOUNT.toLong()
 
@@ -19,7 +21,11 @@ class InMemoryPostRepository : PostRepository {
                 id = index + 1L,
                 authorName = "Нетология. Университет интернет-профессий будущего",
                 content = "Здесь будет текст поста № $index",
-                date = "21 мая в 18:36"
+                date = "21 мая в 18:36",
+                likes = 999,
+                shared = 99,
+                views = 9999,
+                videoLink = if (index % 3 == 0) "https://www.youtube.com/watch?v=z0QaL8ZVTBs" else ""
             )
         }
     )
@@ -61,7 +67,7 @@ class InMemoryPostRepository : PostRepository {
         }
     }
 
-    private companion object {
-        const val GENERATED_POSTS_AMOUNT = 1000
+    override fun getById(postId: Long): Post? {
+        return posts.find { it.id == postId }
     }
 }
