@@ -21,11 +21,7 @@ class PostViewModel(
     val navigateToEditContentScreenEvent = SingleLiveEvent<String>()
     val navigateToViewContentScreenEvent = SingleLiveEvent<Long>()
     val playPostVideo = SingleLiveEvent<String>()
-    val currentPost = MutableLiveData<Post?>(null)
-
-    fun setCurrentPost(postId: Long) {
-        currentPost.value = repository.getById(postId)
-    }
+    private val currentPost = MutableLiveData<Post?>(null)
 
     fun saveButtonClicked(content: String) {
         if (content.isBlank()) return
@@ -44,7 +40,6 @@ class PostViewModel(
 
     override fun likeButtonClicked(post: Post) {
         repository.like(post.id)
-        setCurrentPost(post.id)
     }
 
     override fun shareButtonClicked(post: Post) {
@@ -67,7 +62,6 @@ class PostViewModel(
     }
 
     override fun onContentClicked(post: Post) {
-        currentPost.value = post
         navigateToViewContentScreenEvent.value = post.id
     }
 

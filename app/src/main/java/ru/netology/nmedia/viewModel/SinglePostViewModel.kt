@@ -17,7 +17,7 @@ class SinglePostViewModel(
     private val repository: PostRepository = InMemoryPostRepository
     val data get() = repository.data
 
-    val currentPost = MutableLiveData<Post?>(null)
+    private val currentPost = MutableLiveData<Post?>(null)
 
     val sharePostContent = SingleLiveEvent<String>()
     val navigateToEditContentScreenEvent = SingleLiveEvent<String>()

@@ -26,12 +26,11 @@ class PostViewFragment : Fragment() {
 
         val viewModel: SinglePostViewModel by viewModels(::requireParentFragment)
 
-        viewModel.data.observe(viewLifecycleOwner) {
-            with(viewModel.getPostById(args.postId)) {
-                this?.let {
-                    binding.content.bind(it)
-                    binding.content.listen(it, viewModel)
-                }
+        viewModel.data.observe(viewLifecycleOwner) { posts ->
+            val post = posts.find { it.id == args.postId }
+            post?.let {
+                binding.content.bind(it)
+                binding.content.listen(it, viewModel)
             }
         }
 
@@ -41,7 +40,8 @@ class PostViewFragment : Fragment() {
         }
 
         viewModel.navigateToEditContentScreenEvent.observe(viewLifecycleOwner) { initialContent ->
-            val direction = PostViewFragmentDirections.fromPostViewFragmentToPostContentFragment(initialContent)
+            val direction =
+                PostViewFragmentDirections.fromPostViewFragmentToPostContentFragment(initialContent)
             findNavController().navigate(direction)
         }
 
