@@ -9,7 +9,7 @@ import ru.netology.nmedia.data.impl.InMemoryPostRepository
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.SingleLiveEvent
 
-class PostViewModel(
+class SinglePostViewModel(
     application: Application
 ) : AndroidViewModel(application),
     PostInteractionListener {
@@ -17,11 +17,15 @@ class PostViewModel(
     private val repository: PostRepository = InMemoryPostRepository
     val data get() = repository.data
 
+    private val currentPost = MutableLiveData<Post?>(null)
+
     val sharePostContent = SingleLiveEvent<String>()
     val navigateToEditContentScreenEvent = SingleLiveEvent<String>()
-    val navigateToViewContentScreenEvent = SingleLiveEvent<Long>()
-    val playPostVideo = SingleLiveEvent<String>()
-    private val currentPost = MutableLiveData<Post?>(null)
+    val playVideoLink = SingleLiveEvent<String>()
+    val deletePost = SingleLiveEvent<Unit>()
+
+    fun getPostById(postId: Long): Post? =
+        repository.getById(postId)
 
     fun saveButtonClicked(content: String) {
         if (content.isBlank()) return
@@ -32,21 +36,30 @@ class PostViewModel(
             id = PostRepository.NEW_POST_ID,
             authorName = "Me",
             content = content,
-            date = "today"
+            date = "today",
         )
         repository.save(post)
         currentPost.value = null
-    }
-
-    override fun likeButtonClicked(post: Post) {
-        repository.like(post.id)
     }
 
     override fun shareButtonClicked(post: Post) {
         sharePostContent.value = post.content
     }
 
-    override fun deleteButtonClicked(post: Post) = repository.delete(post.id)
+    override fun playVideoButtonClicked(post: Post) {
+        playVideoLink.value = post.videoLink
+    }
+
+    override fun onContentClicked(post: Post) {
+    }
+
+    override fun likeButtonClicked(post: Post) =
+        repository.like(post.id)
+
+    override fun deleteButtonClicked(post: Post) {
+        repository.delete(post.id)
+        deletePost.value = Unit
+    }
 
     override fun editButtonClicked(post: Post) {
         currentPost.value = post
@@ -55,17 +68,5 @@ class PostViewModel(
 
     override fun cancelButtonClicked() {
         currentPost.value = null
-    }
-
-    override fun playVideoButtonClicked(post: Post) {
-        playPostVideo.value = post.videoLink
-    }
-
-    override fun onContentClicked(post: Post) {
-        navigateToViewContentScreenEvent.value = post.id
-    }
-
-    fun addButtonClicked() {
-        navigateToEditContentScreenEvent.call()
     }
 }
